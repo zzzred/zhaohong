@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>shopping</title>
+    <link rel="stylesheet" type="text/css" href="../css/shopping.css"/>
+</head>
+
+<body>
+
+
+    <div class="catbox">
+        <table id="cartTable">
+            <thead>
+                <tr>
+                    <th>
+                        <label>
+                            <input class="check-all check" type="checkbox">&nbsp;&nbsp;全选</label>
+                    </th>
+                    <th>商品</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>小计</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="on">
+                    <td class="checkbox">
+                        <input class="check-one check" type="checkbox">
+                    </td>
+                    <td class="goods">
+                        <img src="" alt="">
+                        <span>AJ13</span>
+                    </td>
+                    <td class="price">1999.00</td>
+                    <td class="count">
+                        <span class="reduce"></span>
+                        <input class="count-input" type="text" value="1">
+                        <span class="add">+</span>
+                    </td>
+                    <td class="subtotal">1999.00</td>
+                    <td class="operation">
+                        <span class="delete">删除</span>
+                    </td>
+                </tr>
+                <tr class="on">
+                    <td class="checkbox">
+                        <input class="check-one check" type="checkbox">
+                    </td>
+                    <td class="goods">
+                        <img src="" alt="">
+                        <span>AJ1</span>
+                    </td>
+                    <td class="price">2388.00</td>
+                    <td class="count">
+                        <span class="reduce"></span>
+                        <input class="count-input" type="text" value="1">
+                        <span class="add">+</span>
+                    </td>
+                    <td class="subtotal">2388.00</td>
+                    <td class="operation">
+                        <span class="delete">删除</span>
+                    </td>
+                </tr>
+                <tr class="on">
+                    <td class="checkbox">
+                        <input class="check-one check" type="checkbox">
+                    </td>
+                    <td class="goods">
+                        <img src="" alt="">
+                        <span>AJ6</span>
+                    </td>
+                    <td class="price">2428.00</td>
+                    <td class="count">
+                        <span class="reduce"></span>
+                        <input class="count-input" type="text" value="1">
+                        <span class="add">+</span>
+                    </td>
+                    <td class="subtotal">2428.00</td>
+                    <td class="operation">
+                        <span class="delete">删除</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="foot" id="foot">
+            <label class="fl select-all">
+                <input type="checkbox" class="check-all check">&nbsp;&nbsp;全选</label>
+            <a class="fl delete" id="deleteAll" href="javascript:;">删除</a>
+            <div class="fr closing" onclick="getTotal();">结 算</div>
+            <input type="hidden" id="cartTotalPrice">
+            <div class="fr total">合计：￥
+                <span id="priceTotal">11957.48</span>
+            </div>
+            <div class="fr selected" id="selected">已选商品
+                <span id="selectedTotal">4</span>件
+                <span class="arrow up">︽</span>
+                <span class="arrow down">︾</span>
+            </div>
+            <div class="selected-view">
+                <div id="selectedViewList" class="clearfix">
+                    <div>
+                        <img src="http://www.jq22.com/demo/jquery-guc20151105/images/1.jpg">
+                        <span class="del" index="0">取消选择</span>
+                    </div>
+                    <div>
+                        <img src="http://www.jq22.com/demo/jquery-guc20151105/images/2.jpg">
+                        <span class="del" index="1">取消选择</span>
+                    </div>
+                    <div>
+                        <img src="http://www.jq22.com/demo/jquery-guc20151105/images/3.jpg">
+                        <span class="del" index="2">取消选择</span>
+                    </div>
+                    <div>
+                        <img src="http://www.jq22.com/demo/jquery-guc20151105/images/4.jpg">
+                        <span class="del" index="3">取消选择</span>
+                    </div>
+                </div>
+                <span class="arrow">◆
+                    <span>◆</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="ajax.js"></script>
+<script>
+    var p1 = new Promise(function(resolve,reject){
+	ajax("get","index.json",{},function(data) {
+	var data = JSON.parse(data);
+	var len = data.length;
+	var pageNum = Math.ceil(len/5);
+	var btn = document.querySelector(".btnList");
+	var last = document.querySelector(".last");
+	var oBox = document.getElementById("box")
+	var first = document.querySelector(".first");
+	var iNow = 1;
+	for(var i=0;i<pageNum;i++){
+		var a = document.createElement("a");
+		a.innerHTML = (i+1);
+		a.className="js_btn";
+		btn.insertBefore(a,last)
+	}
+
+	page(1)
+	function page(n){
+
+		var str = "";
+		for(var i=0;i<data.length;i++){
+			str+=` <tr class="on">
+                    <td class="checkbox">
+                        <input class="check-one check" type="checkbox">
+                    </td>
+                    <td class="goods">
+                        <img src="" alt="">
+                        <span>{data[i].title}</span>
+                    </td>
+                    <td class="price">{data[i].price}</td>
+                    <td class="count">
+                        <span class="reduce"></span>
+                        <input class="count-input" type="text" value="1">
+                        <span class="add">+</span>
+                    </td>
+                    <td class="subtotal">{data[i].subtotal}</td>
+                    <td class="operation">
+                        <span class="delete">删除</span>
+                    </td>
+                </tr>`;
+		}
+		oBox.innerHTML = str;
+	}
+	
+})
+
+})
+p1.then(function(obj){
+	for(var i=0;i<obj.abtn.length;i++){
+		obj.abtn[i].onclick = function(){
+			obj.page(this.innerHTML)
+			obj.iNow = this.innerHTML;
+		}
+	}
+})
+
+    window.onload = function () {
+        if (!document.getElementsByClassName) {
+            document.getElementsByClassName = function (cls) {
+                var ret = [];
+                var els = document.getElementsByTagName('*');
+                for (var i = 0, len = els.length; i < len; i++) {
+
+                    if (els[i].className.indexOf(cls + ' ') >= 0 || els[i].className.indexOf(' ' + cls + ' ') >= 0 || els[i].className.indexOf(' ' + cls) >= 0) {
+                        ret.push(els[i]);
+                    }
+                }
+                return ret;
+            }
+        }
+
+        var table = document.getElementById('cartTable'); 
+        var selectInputs = document.getElementsByClassName('check'); 
+        var checkAllInputs = document.getElementsByClassName('check-all') 
+        var tr = table.children[1].rows; 
+        var selectedTotal = document.getElementById('selectedTotal'); 
+        var priceTotal = document.getElementById('priceTotal'); 
+        var deleteAll = document.getElementById('deleteAll'); 
+        var selectedViewList = document.getElementById('selectedViewList'); 
+        var selected = document.getElementById('selected'); 
+        var foot = document.getElementById('foot');
+
+        // 购物车表格
+        function getTotal() {
+            var seleted = 0;
+            var price = 0;
+            var HTMLstr = '';
+            for (var i = 0, len = tr.length; i < len; i++) {
+                if (tr[i].getElementsByTagName('input')[0].checked) {
+                    tr[i].className = 'on';
+                    seleted += parseInt(tr[i].getElementsByTagName('input')[1].value);
+                    price += parseFloat(tr[i].cells[4].innerHTML);
+                    HTMLstr += '<div><img src="' + tr[i].getElementsByTagName('img')[0].src + '"><span class="del" index="' + i + '">取消选择</span></div>'
+                }
+                else {
+                    tr[i].className = '';
+                }
+            }
+            selectedTotal.innerHTML = seleted;
+            priceTotal.innerHTML = price.toFixed(2);
+            selectedViewList.innerHTML = HTMLstr;
+
+            if (seleted == 0) {
+                foot.className = 'foot';
+            }
+        }
+        function getSubtotal(tr) {
+            var cells = tr.cells;
+            var price = cells[2]; 
+            var subtotal = cells[4]; 
+            var countInput = tr.getElementsByTagName('input')[1]; 
+            var span = tr.getElementsByTagName('span')[1]; 
+            
+            subtotal.innerHTML = (parseInt(countInput.value) * parseFloat(price.innerHTML)).toFixed(2);
+            
+            if (countInput.value == 1) {
+                span.innerHTML = '';
+            } else {
+                span.innerHTML = '-';
+            }
+        }
+
+        
+        for (var i = 0; i < selectInputs.length; i++) {
+            selectInputs[i].onclick = function () {
+                if (this.className.indexOf('check-all') >= 0) { 
+                    for (var j = 0; j < selectInputs.length; j++) {
+                        selectInputs[j].checked = this.checked;
+                    }
+                }
+                if (!this.checked) { 
+                    for (var i = 0; i < checkAllInputs.length; i++) {
+                        checkAllInputs[i].checked = false;
+                    }
+                }
+                getTotal();    //更新数据
+            }
+        }
+        selected.onclick = function () {
+            if (selectedTotal.innerHTML != 0) {
+                foot.className = (foot.className == 'foot' ? 'foot show' : 'foot');
+            }
+        }
+        selectedViewList.onclick = function (e) {
+            var e = e || window.event;
+            var el = e.srcElement;
+            if (el.className == 'del') {
+                var input = tr[el.getAttribute('index')].getElementsByTagName('input')[0]
+                input.checked = false;
+                input.onclick();
+            }
+        }
+
+        for (var i = 0; i < tr.length; i++) {
+           
+            tr[i].onclick = function (e) {
+                var e = e || window.event;
+                var el = e.target || e.srcElement; 
+                var cls = el.className; 
+                var countInout = this.getElementsByTagName('input')[1]; 
+                var value = parseInt(countInout.value); 
+                switch (cls) {
+                    case 'add': 
+                        countInout.value = value + 1;
+                        getSubtotal(this);
+                        break;
+                    case 'reduce':
+                        if (value > 1) {
+                            countInout.value = value - 1;
+                            getSubtotal(this);
+                        }
+                        break;
+                    case 'delete': 
+                        var conf = confirm('确定删除此商品吗？');
+                        if (conf) {
+                            this.parentNode.removeChild(this);
+                        }
+                        break;
+                }
+                getTotal();
+            }
+            
+            tr[i].getElementsByTagName('input')[1].onkeyup = function () {
+                var val = parseInt(this.value);
+                if (isNaN(val) || val <= 0) {
+                    val = 1;
+                }
+                if (this.value != val) {
+                    this.value = val;
+                }
+                getSubtotal(this.parentNode.parentNode); 
+                getTotal(); 
+            }
+        }
+        // 全部删除
+        deleteAll.onclick = function () {
+            if (selectedTotal.innerHTML != 0) {
+                var con = confirm('确定删除所选商品吗？'); //弹出框
+                if (con) {
+                    for (var i = 0; i < tr.length; i++) {
+                       
+                        if (tr[i].getElementsByTagName('input')[0].checked) {
+                            tr[i].parentNode.removeChild(tr[i]); 
+                            i--; 
+                        }
+                    }
+                }
+            } else {
+                alert('请选择商品！');
+            }
+            getTotal(); 
+        }
+        console.log("\u767e\u5ea6\u641c\u7d22\u3010\u7d20\u6750\u5bb6\u56ed\u3011\u4e0b\u8f7d\u66f4\u591aJS\u7279\u6548\u4ee3\u7801");
+
+        checkAllInputs[0].checked = true;
+        checkAllInputs[0].onclick();
+    }
+</script>
